@@ -6,12 +6,12 @@ import sys
 import click
 from loguru import logger
 
-from prefect-cicd-example import config
-from prefect-cicd-example.cli.base import AbstractCommand
-from prefect-cicd-example.core.version import detect_from_metadata
+from prefect_cicd_example import config
+from prefect_cicd_example.cli.base import AbstractCommand
+from prefect_cicd_example.core.version import detect_from_metadata
 
 # Set the project name.
-APP_NAME = 'prefect-cicd-example'
+APP_NAME = 'prefect_cicd_example'
 
 # Retrieve the project version from packaging.
 __version__ = detect_from_metadata(APP_NAME)

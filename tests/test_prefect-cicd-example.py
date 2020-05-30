@@ -1,8 +1,8 @@
 import pytest
 
 
-class TestPrefect-cicd-example():
-    """Tests for `prefect-cicd-example` module."""
+class TestPrefect_cicd_example():
+    """Tests for `prefect_cicd_example` module."""
 
     def test_one(self):
         assert True

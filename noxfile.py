@@ -8,9 +8,9 @@ nox.options.sessions = ["venv"]
 
 # Configuration values.
 nox_file = Path()
-project_name = 'prefect-cicd-example'
+project_name = 'prefect_cicd_example'
 dockerfile = 'Dockerfile'
-docker_org = 'prefect-cicd-example'
+docker_org = 'prefect_cicd_example'
 docker_repo = f'{docker_org}/{project_name}'
 docker_img = f'{docker_repo}'
 
@@ -129,20 +129,20 @@ def run_all_linters(session):
 
 
 def run_flake8(session):
-    session.run('flake8', 'prefect-cicd-example')
+    session.run('flake8', 'prefect_cicd_example')
 
 
 def run_pydocstyle(session):
-    session.run('pydocstyle', 'prefect-cicd-example')
+    session.run('pydocstyle', 'prefect_cicd_example')
 
 
 def run_pylint(session):
-    session.run('pylint', '--ignore=tests', 'prefect-cicd-example')
+    session.run('pylint', '--ignore=tests', 'prefect_cicd_example')
 
 
 def run_pytest(session, *posargs):
     session.run('pytest', '-x', '--junitxml=/tmp/pytest/junit-py37.xml', '--cov-report', 'term-missing', '--cov-report',
-                'html', '--cov=prefect-cicd-example', *posargs, f'{(nox_file / "tests").resolve()}')
+                'html', '--cov=prefect_cicd_example', *posargs, f'{(nox_file / "tests").resolve()}')
 
 
 def run_pytest_units(session):
