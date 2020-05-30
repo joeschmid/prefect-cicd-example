@@ -8,6 +8,9 @@ executors:
 repo_cache_key: &repo_cache_key
   deps-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}.0
 
+working_directory: &working_directory
+  ~/project/
+
 jobs:
   executor: python
   prepare:
