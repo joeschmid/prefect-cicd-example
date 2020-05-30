@@ -169,14 +169,3 @@ workflows:
               ignore: /.*/
             tags:
               only: /^\d+\.\d+\.\d+$/
-      - upload:
-          requires:
-            - format
-            - lint
-            - test-units
-            - test-integrations
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^\d+\.\d+\.\d+$/
