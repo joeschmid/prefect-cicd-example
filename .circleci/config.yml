@@ -10,30 +10,30 @@ repo_cache_key: &repo_cache_key
 
 jobs:
   executor: python
-    prepare:
-      <<: *defaults
-      steps:
-        - checkout
-        - restore_cache:
-            key: *repo_cache_key
-        - run:
-            name: prepare environment
-            command: |
-              python -m venv venv
-              source venv/bin/activate
-              pip install --upgrade pip
-              pip install invoke nox coveralls
-              nox --install-only -s lint-format lint docs test-units test-integrations
-        - save_cache:
-            paths:
-              - .nox
-              - venv
-            key: *repo_cache_key
-        - persist_to_workspace:
-            root: *working_directory
-            paths:
-              - .nox/*
-              - venv/*
+  prepare:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: *repo_cache_key
+      - run:
+          name: prepare environment
+          command: |
+            python -m venv venv
+            source venv/bin/activate
+            pip install --upgrade pip
+            pip install invoke nox coveralls
+            nox --install-only -s lint-format lint docs test-units test-integrations
+      - save_cache:
+          paths:
+            - .nox
+            - venv
+          key: *repo_cache_key
+      - persist_to_workspace:
+          root: *working_directory
+          paths:
+            - .nox/*
+            - venv/*
 
     format:
       <<: *defaults
