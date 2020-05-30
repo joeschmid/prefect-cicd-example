@@ -12,8 +12,8 @@ working_directory: &working_directory
   ~/project/
 
 jobs:
-  executor: python
   prepare:
+    executor: python
     steps:
       - checkout
       - restore_cache:
@@ -37,84 +37,90 @@ jobs:
             - .nox/*
             - venv/*
 
-    format:
-      steps:
-        - checkout
-        - attach_workspace:
-            at: *working_directory
-        - run:
-            name: check format
-            command: |
-              source venv/bin/activate
-              nox -s lint-format
+  format:
+    executor: python
+    steps:
+      - checkout
+      - attach_workspace:
+          at: *working_directory
+      - run:
+          name: check format
+          command: |
+            source venv/bin/activate
+            nox -s lint-format
 
-    lint:
-      steps:
-        - checkout
-        - attach_workspace:
-            at: *working_directory
-        - run:
-            name: run linters
-            command: |
-              source venv/bin/activate
-              nox -s lint
+  lint:
+    executor: python
+    steps:
+      - checkout
+      - attach_workspace:
+          at: *working_directory
+      - run:
+          name: run linters
+          command: |
+            source venv/bin/activate
+            nox -s lint
 
-    docs:
-      steps:
-        - checkout
-        - attach_workspace:
-            at: *working_directory
-        - run:
-            name: run doc tests
-            command: |
-              source venv/bin/activate
-              nox -s docs
+  docs:
+    executor: python
+    steps:
+      - checkout
+      - attach_workspace:
+          at: *working_directory
+      - run:
+          name: run doc tests
+          command: |
+            source venv/bin/activate
+            nox -s docs
 
-    test-units:
-      steps:
-        - checkout
-        - attach_workspace:
-            at: *working_directory
-        - run:
-            name: run unit tests
-            command: |
-              source venv/bin/activate
-              nox -s test-units
-              coveralls
-        - store_test_results:
-            path: test-results
-    test-integrations:
-      steps:
-        - checkout
-        - attach_workspace:
-            at: *working_directory
-        - run:
-            name: run integration tests
-            command: |
-              source venv/bin/activate
-              nox -s test-integrations
+  test-units:
+    executor: python
+    steps:
+      - checkout
+      - attach_workspace:
+          at: *working_directory
+      - run:
+          name: run unit tests
+          command: |
+            source venv/bin/activate
+            nox -s test-units
+            coveralls
+      - store_test_results:
+          path: test-results
+  test-integrations:
+    executor: python
+    steps:
+      - checkout
+      - attach_workspace:
+          at: *working_directory
+      - run:
+          name: run integration tests
+          command: |
+            source venv/bin/activate
+            nox -s test-integrations
 
-    publish:
-      steps:
-        - checkout
-        - attach_workspace:
-            at: *working_directory
-        - add_ssh_keys:
-            fingerprints:
-              - "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
-        - run:
-            name: Configure git
-            command: |
-              git config --global user.email "circleci@circleci.com"
-              git config --global user.name "CircleCI"
-        - run:
-            name: Build the documentation
-            command: |
-              source venv/bin/activate
-              nox -s docs
-        - run:
-            name: Publish the docs
-            command: inv publish
+  publish:
+    executor: python
+    steps:
+      - checkout
+      - attach_workspace:
+          at: *working_directory
+      - add_ssh_keys:
+          fingerprints:
+            - "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
+      - run:
+          name: Configure git
+          command: |
+            git config --global user.email "circleci@circleci.com"
+            git config --global user.name "CircleCI"
+      - run:
+          name: Build the documentation
+          command: |
+            source venv/bin/activate
+            nox -s docs
+      - run:
+          name: Publish the docs
+          command: inv publish
 
 workflows:
   version: 2
