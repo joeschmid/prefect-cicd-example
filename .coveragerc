@@ -1,0 +1,8 @@
+[run]
+omit =
+    *__init__.py
+    prefect-cicd-example/cli/*
+    prefect-cicd-example/config.py
+    prefect-cicd-example/core/version.py
+    prefect-cicd-example/main.py
+    prefect-cicd-example/tests/*

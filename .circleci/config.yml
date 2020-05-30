@@ -1,0 +1,181 @@
+version: 2.1
+
+executors:
+  python:
+    docker:
+      - image: circleci/python:3.7.4-buster-node
+
+repo_cache_key: &repo_cache_key
+  deps-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}.0
+
+jobs:
+  executor: python
+    prepare:
+      <<: *defaults
+      steps:
+        - checkout
+        - restore_cache:
+            key: *repo_cache_key
+        - run:
+            name: prepare environment
+            command: |
+              python -m venv venv
+              source venv/bin/activate
+              pip install --upgrade pip
+              pip install invoke nox coveralls
+              nox --install-only -s lint-format lint docs test-units test-integrations
+        - save_cache:
+            paths:
+              - .nox
+              - venv
+            key: *repo_cache_key
+        - persist_to_workspace:
+            root: *working_directory
+            paths:
+              - .nox/*
+              - venv/*
+
+    format:
+      <<: *defaults
+      steps:
+        - checkout
+        - attach_workspace:
+            at: *working_directory
+        - run:
+            name: check format
+            command: |
+              source venv/bin/activate
+              nox -s lint-format
+
+    lint:
+      <<: *defaults
+      steps:
+        - checkout
+        - attach_workspace:
+            at: *working_directory
+        - run:
+            name: run linters
+            command: |
+              source venv/bin/activate
+              nox -s lint
+
+    docs:
+      <<: *defaults
+      steps:
+        - checkout
+        - attach_workspace:
+            at: *working_directory
+        - run:
+            name: run doc tests
+            command: |
+              source venv/bin/activate
+              nox -s docs
+
+    test-units:
+      <<: *defaults
+      steps:
+        - checkout
+        - attach_workspace:
+            at: *working_directory
+        - run:
+            name: run unit tests
+            command: |
+              source venv/bin/activate
+              nox -s test-units
+              coveralls
+        - store_test_results:
+            path: test-results
+    test-integrations:
+      <<: *defaults
+      steps:
+        - checkout
+        - attach_workspace:
+            at: *working_directory
+        - run:
+            name: run integration tests
+            command: |
+              source venv/bin/activate
+              nox -s test-integrations
+
+    publish:
+      <<: *defaults
+      steps:
+        - checkout
+        - attach_workspace:
+            at: *working_directory
+        - add_ssh_keys:
+            fingerprints:
+              - "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
+        - run:
+            name: Configure git
+            command: |
+              git config --global user.email "circleci@circleci.com"
+              git config --global user.name "CircleCI"
+        - run:
+            name: Build the documentation
+            command: |
+              source venv/bin/activate
+              nox -s docs
+        - run:
+            name: Publish the docs
+            command: inv publish
+
+workflows:
+  version: 2
+  gates:
+    jobs:
+      - prepare:
+          filters:
+            tags:
+              only: /.*/
+      - format:
+          requires:
+            - prepare
+          filters:
+            tags:
+              only: /.*/
+      - lint:
+          requires:
+            - prepare
+          filters:
+            tags:
+              only: /.*/
+      - docs:
+          requires:
+            - prepare
+          filters:
+            tags:
+              only: /.*/
+      - test-units:
+          requires:
+            - prepare
+          filters:
+            tags:
+              only: /.*/
+      - test-integrations:
+          requires:
+            - prepare
+          filters:
+            tags:
+              only: /.*/
+      - publish:
+          requires:
+            - docs
+            - lint
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+\.\d+\.\d+$/
+      - upload:
+          requires:
+            - format
+            - lint
+            - test-units
+            - test-integrations
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+\.\d+\.\d+$/
+
