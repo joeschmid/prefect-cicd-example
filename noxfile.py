@@ -111,11 +111,11 @@ def venv(session):
     with activate.open('a') as f:
         f.write(f'\n[ -f {activate.resolve()}/postactivate ] && . {activate.resolve()}/postactivate\n')
 
-    prefect-cicd-example_complete = nox_file / 'contrib/prefect-cicd-example-complete.sh'
+    prefect_cicd_example_complete = nox_file / 'contrib/prefect-cicd-example-complete.sh'
     postactivate = env_dir / 'postactivate'
     with postactivate.open('a') as f:
         f.write('export PYTHONBREAKPOINT=bpdb.set_trace\n')
-        f.write(f'source { prefect-cicd-example_complete.resolve() }\n')
+        f.write(f'source { prefect_cicd_example_complete.resolve() }\n')
 
     predeactivate = env_dir / 'predeactivate'
     with predeactivate.open('a') as f:

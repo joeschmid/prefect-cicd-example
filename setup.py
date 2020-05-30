@@ -1,8 +1,8 @@
-from setuptools import find_packages
+from setuptools import find_namespace_packages
 from setuptools import setup
 
 setup(
-    packages=find_packages(),
+    packages=find_namespace_packages(include=["prefect-cicd-example.*"], where="."),
     pbr=True,
     setup_requires=['pbr'],
 )

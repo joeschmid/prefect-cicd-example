@@ -7,7 +7,7 @@ from nox.virtualenv import VirtualEnv
 # Configuration values.
 VENV = 'venv'
 project_name = 'prefect-cicd-example'
-docker_org = 'prefect-cicd-example'
+docker_org = 'jschmid22'
 docker_repo = f'{docker_org}/{project_name}'
 
 
@@ -57,9 +57,9 @@ def dist_upload(c):
 def flame_graph(c):
     """Create an interactive CPU flame graph profile."""
     _, venv_bin, = get_venv(VENV)
-    prefect-cicd-example = venv_bin / 'prefect-cicd-example'
+    prefect_cicd_example = venv_bin / 'prefect-cicd-example'
     with c.prefix(autoprefix()):
-        c.run(f'sudo py-spy -d 20 --flame profile.svg -- { prefect-cicd-example.resolve() } -v --pages 5')
+        c.run(f'sudo py-spy -d 20 --flame profile.svg -- { prefect_cicd_example.resolve() } -v --pages 5')
 
 
 @task

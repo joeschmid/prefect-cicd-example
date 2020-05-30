@@ -4,6 +4,8 @@ aiohttp-theme==0.1.5
 bpython
 flake8==3.7.8
 ghp-import==0.5.5
+invoke
+nox
 py-spy==0.1.11
 pydocstyle==4.0.0
 pyinstrument==3.0.3
