@@ -11,7 +11,6 @@ repo_cache_key: &repo_cache_key
 jobs:
   executor: python
   prepare:
-    <<: *defaults
     steps:
       - checkout
       - restore_cache:
@@ -36,7 +35,6 @@ jobs:
             - venv/*
 
     format:
-      <<: *defaults
       steps:
         - checkout
         - attach_workspace:
@@ -48,7 +46,6 @@ jobs:
               nox -s lint-format
 
     lint:
-      <<: *defaults
       steps:
         - checkout
         - attach_workspace:
@@ -60,7 +57,6 @@ jobs:
               nox -s lint
 
     docs:
-      <<: *defaults
       steps:
         - checkout
         - attach_workspace:
@@ -72,7 +68,6 @@ jobs:
               nox -s docs
 
     test-units:
-      <<: *defaults
       steps:
         - checkout
         - attach_workspace:
@@ -86,7 +81,6 @@ jobs:
         - store_test_results:
             path: test-results
     test-integrations:
-      <<: *defaults
       steps:
         - checkout
         - attach_workspace:
@@ -98,7 +92,6 @@ jobs:
               nox -s test-integrations
 
     publish:
-      <<: *defaults
       steps:
         - checkout
         - attach_workspace:
@@ -178,4 +171,3 @@ workflows:
               ignore: /.*/
             tags:
               only: /^\d+\.\d+\.\d+$/
-
