@@ -3,7 +3,7 @@ version: 2.1
 executors:
   python:
     docker:
-      - image: circleci/python:3.7.4-buster-node
+      - image: circleci/python:3.7.7-buster-node
 
 repo_cache_key: &repo_cache_key
   deps-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}.0
