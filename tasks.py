@@ -15,7 +15,9 @@ docker_repo = f'{docker_org}/{project_name}'
 def build_docker(c):
     """Build a docker image."""
     tag = c.run('git describe', hide=True)
-    docker_img = f'{docker_repo}:{tag.stdout.strip()}'
+    # tag = c.run('git rev-parse --short HEAD', hide=True)
+    branch = c.run('git branch --show-current', hide=True)
+    docker_img = f'{docker_repo}:{branch.stdout.strip()}-{tag.stdout.strip()}'
     c.run(f'docker build -t {docker_img} .')
 
 
