@@ -84,7 +84,7 @@ jobs:
           command: |
             source venv/bin/activate
             nox -s test-units
-            coveralls
+            # coveralls
       - store_test_results:
           path: test-results
   test-integrations:
